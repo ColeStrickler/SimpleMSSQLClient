@@ -32,27 +32,38 @@ namespace SQL
             }
 
             String query = "";
+            SqlCommand command;
+            SqlDataReader reader;
 
-            while(query != "exit")
+            while (query != "exit")
             {
                 Console.Write("mssql>");
                 query = Console.ReadLine();
-                SqlCommand command = new SqlCommand(query, con);
-                SqlDataReader reader = command.ExecuteReader();
-                reader.Read();
-                if (reader.FieldCount > 0)
+               
+                try
                 {
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    command = new SqlCommand(query, con);
+                    reader = command.ExecuteReader();
+                    reader.Read();
+                    if (reader.FieldCount > 0)
                     {
-                        Console.Write(reader[i].ToString() + ",");
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            Console.Write(reader[i].ToString() + ",");
+                        }
                     }
+                    else
+                    {
+                        Console.Write("No data returned");
+                    }
+                    reader.Close();
                 }
-                else
+                catch
                 {
-                    Console.Write("No data returned");
+                    Console.WriteLine("Query triggered an error!");
                 }
                 Console.Write("\n");
-                reader.Close();
+                
 
             }
 
